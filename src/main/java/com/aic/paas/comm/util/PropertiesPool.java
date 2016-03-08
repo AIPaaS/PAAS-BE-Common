@@ -6,14 +6,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.springframework.beans.factory.InitializingBean;
+
 import com.binary.core.io.Resource;
 import com.binary.core.io.ResourceResolver;
 import com.binary.core.util.BinaryUtils;
 import com.binary.core.util.Properties;
 
-public class PropertiesPool implements Serializable {
+public class PropertiesPool implements Serializable, InitializingBean {
 	private static final long serialVersionUID = 1L;
 	
+	
+	
+	private static PropertiesPool pool;
 	
 	
 	private final Map<String, String> properties = new HashMap<String, String>();
@@ -114,6 +119,27 @@ public class PropertiesPool implements Serializable {
 	 */
 	public Set<Entry<String, String>> entrySet() {
 		return properties.entrySet();
+	}
+	
+	
+	
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		pool = this;
+	}
+	
+	
+	
+	
+	/**
+	 * 获取所有属性
+	 * @return
+	 */
+	public static Map<String, String> getProperties() {
+		if(pool == null) {
+			return new HashMap<String, String>();
+		}
+		return pool.properties;
 	}
 	
 	
